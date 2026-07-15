@@ -1,13 +1,14 @@
-"""Temporary package entrypoint until the CLI task is implemented."""
+"""Package entrypoint for `python -m trading_bot`."""
 
 from __future__ import annotations
 
+from .cli import app
+
 
 def main() -> None:
-    """Print a minimal message proving the package entrypoint is wired."""
-    print("Binance Futures Testnet Trading Bot foundation is installed.")
+    """Run the Typer CLI app."""
+    app()
 
 
 if __name__ == "__main__":
     main()
-
