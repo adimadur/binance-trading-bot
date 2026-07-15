@@ -13,4 +13,4 @@ build/
 *.egg-info/
 logs/*
 !logs/.gitkeep
-
+!logs/trading_bot.log

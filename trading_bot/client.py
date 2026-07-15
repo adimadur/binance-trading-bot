@@ -139,7 +139,7 @@ class BinanceFuturesClient:
             method=method,
             endpoint=endpoint,
             status_code=response.status_code,
-            response=_response_log_body(response),
+            response=_response_log_body(response, endpoint),
         )
 
         if response.status_code >= 400:
@@ -195,13 +195,20 @@ def _current_timestamp_ms() -> int:
     return int(time.time() * 1000)
 
 
-def _response_log_body(response: httpx.Response) -> Any:
+def _response_log_body(response: httpx.Response, endpoint: str) -> Any:
     if not response.content:
         return {}
     try:
-        return response.json()
+        data = response.json()
     except ValueError:
         return response.text
+    if endpoint == "/fapi/v1/exchangeInfo" and isinstance(data, dict) and "symbols" in data:
+        return {
+            "serverTime": data.get("serverTime"),
+            "assets_count": len(data.get("assets", [])),
+            "symbols_count": len(data.get("symbols", [])),
+        }
+    return data
 
 
 def _sanitize_error_message(message: str, params: dict[str, Any]) -> str:

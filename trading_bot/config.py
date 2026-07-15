@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import os
 from dataclasses import dataclass
 from pathlib import Path
@@ -29,6 +30,7 @@ def load_settings(env_file: str | Path | None = None) -> Settings:
     if env_file is None:
         env_file = Path.cwd() / ".env"
 
+    logging.getLogger("dotenv.main").setLevel(logging.ERROR)
     load_dotenv(env_file)
 
     api_key = os.getenv("BINANCE_TESTNET_API_KEY", "").strip()
@@ -57,4 +59,3 @@ def load_settings(env_file: str | Path | None = None) -> Settings:
         base_url=base_url,
         recv_window=recv_window,
     )
-
