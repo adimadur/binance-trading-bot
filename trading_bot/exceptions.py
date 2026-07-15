@@ -22,6 +22,14 @@ class ExchangeRuleError(ValidationError):
 class BinanceAPIError(TradingBotError):
     """Raised when Binance returns a structured API error."""
 
+    def __init__(self, message: str, code: int | None = None):
+        self.code = code
+        self.message = message
+        if code is None:
+            super().__init__(message)
+        else:
+            super().__init__(f"Binance API error {code}: {message}")
+
 
 class BinanceHTTPError(TradingBotError):
     """Raised when Binance returns an unexpected HTTP error."""
@@ -33,4 +41,3 @@ class NetworkError(TradingBotError):
 
 class BinanceResponseError(TradingBotError):
     """Raised when Binance returns an unexpected response shape."""
-

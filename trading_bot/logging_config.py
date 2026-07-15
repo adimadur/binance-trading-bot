@@ -15,6 +15,8 @@ SENSITIVE_FIELD_NAMES = {
     "api_key",
     "apikey",
     "apiKey",
+    "x-mbx-apikey",
+    "X-MBX-APIKEY",
     "secret",
     "api_secret",
     "apiSecret",
@@ -27,7 +29,9 @@ def redact_sensitive_fields(value: Any) -> Any:
     """Return a copy of nested data with sensitive fields redacted."""
     if isinstance(value, Mapping):
         return {
-            key: REDACTED if str(key) in SENSITIVE_FIELD_NAMES else redact_sensitive_fields(item)
+            key: REDACTED
+            if str(key) in SENSITIVE_FIELD_NAMES or str(key).lower() in SENSITIVE_FIELD_NAMES
+            else redact_sensitive_fields(item)
             for key, item in value.items()
         }
     if isinstance(value, list):
@@ -59,4 +63,3 @@ def setup_logging(log_file: Path = LOG_FILE) -> logging.Logger:
         logger.addHandler(file_handler)
 
     return logger
-
